@@ -15,19 +15,7 @@
   "compaction": {
     "threshold": 0.8
   },
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".coda/hooks/inject-no-overthinking.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
-  },
+  "hooks": {},
   "reasoning": {
     "enabled": true,
     "effort": "none"
