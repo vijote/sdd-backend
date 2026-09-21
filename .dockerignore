@@ -1,0 +1,8 @@
+.git/
+.coda/
+.github/
+specs/
+bin/
+*.out
+coverage.txt
+.golangci.yml
