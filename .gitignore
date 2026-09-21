@@ -1,3 +1,6 @@
 terraform.tfvars
 .coda/tmp
 .terraform/
+bin/
+*.out
+coverage.txt
