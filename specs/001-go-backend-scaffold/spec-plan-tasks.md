@@ -1,6 +1,11 @@
-# Spec · Plan · Tasks: Go Backend Scaffold
+---
+name: 001-go-backend-scaffold
+description: Scaffold a Go backend with chi HTTP server, envconfig config, /healthz endpoint, and automated CI.
+date: 2026-09-20
+status: Approved
+---
 
-**Branch**: `001-go-backend-scaffold` | **Date**: 2026-09-20 | **Status**: Approved
+# Spec · Plan · Tasks: Go Backend Scaffold
 
 ---
 

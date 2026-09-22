@@ -1,9 +1,9 @@
 ---
-name: speckit-fast
-description: A condensed, interview-driven workflow to specify, plan, and task a feature in one go, designed for smaller context windows.
+name: specify
+description: A condensed, interview-driven workflow to specify, plan, and task a feature in one go, designed for smaller context windows. Always writes the consolidated plan to specs/NNN-feature-name/spec-plan-tasks.md.
 ---
 
-# speckit-fast: The Condensed Planning Workflow
+# specify: The Condensed Planning Workflow
 
 You are executing a condensed, end-to-end specification and planning workflow. This skill combines the iterative interviewing of "grilling" with the structured output of `speckit-specify`, `speckit-plan`, and `speckit-tasks`.
 
@@ -35,6 +35,8 @@ Your goal is to reach a shared understanding of the user's request, **within the
 
 Once the frontier is empty (all decisions settled), generate a **single, consolidated execution plan** as a markdown Artifact. Do **not** proceed to implementation yet.
 
+**Always write the artifact to a spec file** — do not deliver it only via stdout. Create `specs/NNN-feature-name/spec-plan-tasks.md` where `NNN` is the next sequential number (scan `specs/` for the highest existing prefix) and `feature-name` is a short kebab-case slug. Follow the structure in `.coda/templates/spec-template.md` (frontmatter + SPEC / PLAN / TASKS / CHK sections). The frontmatter is required: `name` (spec id), `description` (one-sentence overview), `date`, `status` — it is the trace agents use to get a whole-picture view of all specs.
+
 Format the artifact as a nested bulleted list to ensure perfect traceability. Each top-level bullet is a requirement (Spec), with its corresponding architectural changes (Plan) and steps (Tasks) nested beneath it.
 
 **Format Template:**
@@ -50,4 +52,4 @@ Format the artifact as a nested bulleted list to ensure perfect traceability. Ea
 Apply the constitution constraints throughout: no narrative, <200 lines total, all ACs as CLI commands.
 
 ## Phase 4: Human Confirmation
-After outputting the artifact, pause and explicitly ask the user for confirmation (e.g., "Does this plan look correct? Should we proceed with implementation?"). Do not write any code until the user approves.
+After writing the spec file, report its path and pause, explicitly asking the user for confirmation (e.g., "Spec written to `specs/NNN-feature-name/spec-plan-tasks.md`. Does this plan look correct? Should we proceed with implementation?"). Do not write any code until the user approves.

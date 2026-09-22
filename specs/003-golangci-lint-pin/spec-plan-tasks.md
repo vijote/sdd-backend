@@ -1,6 +1,11 @@
-# Spec · Plan · Tasks: Pin golangci-lint v2.13.2 in CI
+---
+name: 003-golangci-lint-pin
+description: Pin golangci-lint to v2.13.2 and setup-go to 1.27.1 in CI to fix the Go version mismatch lint failure.
+date: 2026-09-22
+status: Approved
+---
 
-**Branch**: `003-golangci-lint-pin` | **Date**: 2026-09-22 | **Status**: Approved
+# Spec · Plan · Tasks: Pin golangci-lint v2.13.2 in CI
 
 ---
 

@@ -1,6 +1,11 @@
-# Spec · Plan · Tasks: [FEATURE_NAME]
+---
+name: [NNN-feature-name]
+description: [One-sentence overview of the spec]
+date: [DATE]
+status: Draft
+---
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Status**: Draft
+# Spec · Plan · Tasks: [FEATURE_NAME]
 
 ---
 
