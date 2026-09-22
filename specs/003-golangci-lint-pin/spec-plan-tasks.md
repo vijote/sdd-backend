@@ -29,7 +29,7 @@ status: Approved
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `can't load config` error).
+- [x] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `can't load config` error).
 
 ### Assumptions & Constraints
 - `go.mod` stays at `go 1.27.1`.
@@ -58,7 +58,7 @@ status: Approved
 - [x] T002 [Stage 1: CI] Set `go-version: "1.27.1"` on the `actions/setup-go@v5` step in `.github/workflows/ci.yml`
 
 ### Stage 2: Validation
-- [ ] T003 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001, T002)
+- [x] T003 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001, T002)
 
 ---
 

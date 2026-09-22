@@ -25,7 +25,7 @@ status: Approved
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `invalid version string` error).
+- [x] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `invalid version string` error).
 
 ### Assumptions & Constraints
 - `golangci-lint` stays pinned at `v2.13.2` (spec 003).
@@ -53,7 +53,7 @@ status: Approved
 - [x] T001 [Stage 1: CI] Change `uses: golangci/golangci-lint-action@v6` to `uses: golangci/golangci-lint-action@v7` in `.github/workflows/ci.yml`
 
 ### Stage 2: Validation
-- [ ] T002 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001)
+- [x] T002 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001)
 
 ---
 

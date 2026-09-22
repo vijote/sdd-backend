@@ -41,7 +41,7 @@ linters:
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `config verify` / `additional properties` error).
+- [x] AC-001: CI `test` job green on push to `main` (Build, Lint, Test steps all pass; no `config verify` / `additional properties` error).
 
 ### Assumptions & Constraints
 - golangci-lint stays pinned at `v2.13.2` (spec 003); action stays `@v7` (spec 004).
@@ -69,7 +69,7 @@ linters:
 - [x] T001 [Stage 1: Config] In `.golangci.yml`, delete the `issues:` block (`exclude-dirs: [bin]`) and add `exclusions.paths: ["^bin/"]` under `linters:`
 
 ### Stage 2: Validation
-- [ ] T002 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001)
+- [x] T002 [Stage 2: Validate] Push to `main`, confirm CI `test` job green (AC-001) (Depends on T001)
 
 ---
 
