@@ -1,24 +1,23 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/003-golangci-lint-pin` (T001–T002 `[x]`; T003 validation pending)
+- `specs/004-golangci-lint-action-v7` (T001 `[x]`; T002 validation pending)
 
 **Objective:**
-- Pin `golangci-lint` to `v2.13.2` in CI and align `setup-go` to `1.27.1` (fixes `can't load config: go1.24 < 1.27.1` lint failure).
+- Bump `golangci-lint-action` from `@v6` to `@v7` in CI (v6 rejects the golangci-lint v2.13.2 binary pinned in spec 003).
 
 **Context (Why):**
-- CI Lint step failed: `golangci-lint-action` `version: latest` resolved to a Go 1.24-built binary, below the `go.mod` target `1.27.1`.
+- CI Lint step failed: `invalid version string 'v2.13.2', golangci-lint v2 is not supported by golangci-lint-action v6, you must update to golangci-lint-action v7`.
 
 **Modified/Uncommitted Files:**
-- `.github/workflows/ci.yml` (golangci-lint pin + setup-go bump)
-- `specs/003-golangci-lint-pin/spec-plan-tasks.md` (new spec)
-- `.coda/feature.json` (active spec → 003)
-- `.coda/config.json` (local: removed UserPromptSubmit hook — intentionally not committed)
+- `.github/workflows/ci.yml` (golangci-lint-action v6 → v7)
+- `specs/004-golangci-lint-action-v7/spec-plan-tasks.md` (new spec)
+- `.coda/feature.json` (active spec → 004)
 
 **Blockers/Unresolved Bugs:**
 - None.
 
 **Next Immediate Steps:**
-- T003: Push to `main`, confirm CI `test` job green (AC-001).
+- T002: Push to `main`, confirm CI `test` job green (AC-001).
 - Spec 002 (dockerfile) T004–T008 validation still pending (docker build/run/curl/inspect).
 - Start next spec: GORM/MySQL persistence (or CI docker job / GHCR push).
