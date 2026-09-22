@@ -1,18 +1,18 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/004-golangci-lint-action-v7` (T001 `[x]`; T002 validation pending)
+- `specs/005-golangci-config-v2-schema` (T001 `[x]`; T002 validation pending)
 
 **Objective:**
-- Bump `golangci-lint-action` from `@v6` to `@v7` in CI (v6 rejects the golangci-lint v2.13.2 binary pinned in spec 003).
+- Migrate `.golangci.yml` to the v2 schema: remove `issues.exclude-dirs`, add `linters.exclusions.paths: ["^bin/"]` (fixes `config verify` failure under golangci-lint v2.13.2 / action v7).
 
 **Context (Why):**
-- CI Lint step failed: `invalid version string 'v2.13.2', golangci-lint v2 is not supported by golangci-lint-action v6, you must update to golangci-lint-action v7`.
+- CI Lint step failed `golangci-lint config verify`: `additional properties 'exclude-dirs' not allowed` — v1-era key removed in the v2 schema.
 
 **Modified/Uncommitted Files:**
-- `.github/workflows/ci.yml` (golangci-lint-action v6 → v7)
-- `specs/004-golangci-lint-action-v7/spec-plan-tasks.md` (new spec)
-- `.coda/feature.json` (active spec → 004)
+- `.golangci.yml` (issues.exclude-dirs → linters.exclusions.paths)
+- `specs/005-golangci-config-v2-schema/spec-plan-tasks.md` (new spec)
+- `.coda/feature.json` (active spec → 005)
 
 **Blockers/Unresolved Bugs:**
 - None.
