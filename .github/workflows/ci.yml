@@ -12,6 +12,7 @@ permissions:
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_BOOTSTRAP_ROLE_ARN: ${{ vars.AWS_BOOTSTRAP_ROLE_ARN }}
   AWS_ECR_ROLE_ARN: ${{ vars.AWS_ECR_ROLE_ARN }}
   AWS_ECR_REPOSITORY: ${{ vars.AWS_ECR_REPOSITORY }}
 
@@ -45,11 +46,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Bootstrap Credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_BOOTSTRAP_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Assume ECR Target Role
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ env.AWS_ECR_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          role-chaining: true
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
