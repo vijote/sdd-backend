@@ -71,5 +71,3 @@ jobs:
           tags: |
             ${{ steps.ecr-login.outputs.registry }}/${{ env.AWS_ECR_REPOSITORY }}:${{ github.sha }}
             ${{ steps.ecr-login.outputs.registry }}/${{ env.AWS_ECR_REPOSITORY }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
