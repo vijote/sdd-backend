@@ -1,21 +1,24 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/002-dockerfile` (T001–T003 `[x]`; T004–T008 validation pending)
+- `specs/003-golangci-lint-pin` (T001–T002 `[x]`; T003 validation pending)
 
 **Objective:**
-- Multi-stage Dockerfile (`golang:1.27-alpine` → `gcr.io/distroless/static-debian12`) + `.dockerignore` for the Go backend.
+- Pin `golangci-lint` to `v2.13.2` in CI and align `setup-go` to `1.27.1` (fixes `can't load config: go1.24 < 1.27.1` lint failure).
 
 **Context (Why):**
-- Containerize the scaffolded Go backend (spec 001). CI docker job, registry push, and K8s deployment deferred to follow-up specs.
+- CI Lint step failed: `golangci-lint-action` `version: latest` resolved to a Go 1.24-built binary, below the `go.mod` target `1.27.1`.
 
 **Modified/Uncommitted Files:**
+- `.github/workflows/ci.yml` (golangci-lint pin + setup-go bump)
+- `specs/003-golangci-lint-pin/spec-plan-tasks.md` (new spec)
+- `.coda/feature.json` (active spec → 003)
 - `.coda/config.json` (local: removed UserPromptSubmit hook — intentionally not committed)
 
 **Blockers/Unresolved Bugs:**
 - None.
 
 **Next Immediate Steps:**
-- Run AC-001…AC-004 (`docker build`/`run`/`curl`/`inspect`) and mark T004–T008 `[x]`.
-- Verify spec 001 CI (AC-005: build, lint, test) is green on `main` (pushed as `8faa6d4`).
+- T003: Push to `main`, confirm CI `test` job green (AC-001).
+- Spec 002 (dockerfile) T004–T008 validation still pending (docker build/run/curl/inspect).
 - Start next spec: GORM/MySQL persistence (or CI docker job / GHCR push).
