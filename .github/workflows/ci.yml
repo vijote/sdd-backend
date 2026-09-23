@@ -71,3 +71,12 @@ jobs:
           tags: |
             ${{ steps.ecr-login.outputs.registry }}/${{ env.AWS_ECR_REPOSITORY }}:${{ github.sha }}
             ${{ steps.ecr-login.outputs.registry }}/${{ env.AWS_ECR_REPOSITORY }}:latest
+
+      - name: Trigger infra deploy
+        env:
+          GH_TOKEN: ${{ secrets.INFRA_PAT }}
+        run: |
+          gh workflow run deploy-images.yml \
+            --repo vijote/sdd-infra-v2 \
+            --ref main \
+            -f backend_image_tag=${{ github.sha }}
