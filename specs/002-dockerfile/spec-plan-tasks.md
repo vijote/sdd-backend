@@ -2,7 +2,7 @@
 name: 002-dockerfile
 description: Multi-stage Dockerfile (golang:1.27-alpine → distroless) + .dockerignore to containerize the Go backend.
 date: 2026-09-21
-status: Approved
+status: Implemented
 ---
 
 # Spec · Plan · Tasks: Dockerfile for Go Backend

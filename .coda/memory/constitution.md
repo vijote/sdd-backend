@@ -1,7 +1,7 @@
 <!--
 Sync Impact Report:
-Version change: 2.4.0 → 3.0.0 (MAJOR: Pivot to Go backend objective)
-Modified principles: Core Principles 1, 2, 5, 6, 7, 8
+Version change: 3.0.0 → 4.0.0 (MAJOR: Pivot to URL shortener backend objective)
+Modified principles: Core Principles 2, 7
 Added sections: None
 Removed sections: None
 Follow-up TODOs: None
@@ -19,9 +19,9 @@ Use explicit engineering jargon, precise file paths, and exact Go package/struct
 - Exact Go structs, interfaces, and function signatures (with types, defaults, and constraints)
 - HTTP API schemas using `go-chi/chi/v5` router paths and methods
 - Database models and persistence logic using GORM (`gorm.io/gorm` and `gorm.io/driver/mysql`)
-- Kubernetes interactions using `k8s.io/client-go` and `k8s.io/api`
 - Configuration structures via `envconfig` or `viper`
-- GitHub Webhook/Integration schemas using `google/go-github/v60` and HMAC validation
+- Short code generation: SHA-256 hash of the long URL, truncated to 7 base62 characters, with collision detection and retry (re-hash with an incrementing salt) before persistence
+- Redirect contract: `GET /{code}` MUST issue an HTTP 301/302 to the stored long URL; unknown codes MUST return 404
 
 ### 3. Payload & Token Efficiency
 Keep spec, plan, and architecture delta artifacts strictly below 200 lines. Use compact markdown tables, bullet points, and code blocks. Non-frontier and local LLMs (e.g. GLM-4.6, Qwen-Coder) must not experience reasoning degradation from bloated context windows.
@@ -45,7 +45,7 @@ Never use vague adjectives ("robust", "scalable", "fast"). All acceptance criter
 
 ### 7. CI/CD Automation Policy
 - **No Manual Approval Gates**: All deployments and test suites must run fully automated on main branch push.
-- **Security via Automation**: GitHub webhook signatures (HMAC SHA-256) must be rigorously tested and validated in automation.
+- **Input Validation via Automation**: Long URL validation (scheme allowlist: `http`/`https`, non-empty, parseable) must be rigorously tested and validated in automation.
 
 ### 8. Prefer Standard Go Tooling Over Custom Scripts
 - **Tooling-First Execution**: Use `go test`, `go build`, `go mod`, and `golangci-lint` as the primary mechanisms for validation and state management.
@@ -59,4 +59,4 @@ When implementing tasks with LLM agents, load only the minimal context payload:
 ## Governance
 This constitution is the non-negotiable governing standard for all artifacts in this repository. All PRs, plans, specifications, and task graphs must strictly adhere to these directives.
 
-**Version**: 3.0.0 | **Ratified**: 2026-09-19 | **Last Amended**: 2026-09-19
+**Version**: 4.0.0 | **Ratified**: 2026-09-19 | **Last Amended**: 2026-09-23

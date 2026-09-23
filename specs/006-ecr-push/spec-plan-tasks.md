@@ -67,9 +67,9 @@ jobs:
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `test` job green on push to `main` (no regression).
-- [ ] AC-002: CI `docker` job green on push to `main` (build + push succeed).
-- [ ] AC-003: `aws ecr describe-images --repository-name $AWS_ECR_REPOSITORY --image-ids imageTag=<pushed-sha>` returns the image (run with ECR role credentials).
+- [x] AC-001: CI `test` job green on push to `main` (no regression).
+- [x] AC-002: CI `docker` job green on push to `main` (build + push succeed).
+- [x] AC-003: `aws ecr describe-images --repository-name $AWS_ECR_REPOSITORY --image-ids imageTag=<pushed-sha>` returns the image (run with ECR role credentials).
 
 ### Assumptions & Constraints
 - ECR repository pre-exists; the workflow never creates it.
@@ -102,8 +102,8 @@ jobs:
 - [x] T003 [Stage 1: CI] Add the `docker` job (`needs: test`, main-push/dispatch guard, OIDC assume, ecr-login, build-push with SHA+latest tags, GHA cache) to `.github/workflows/ci.yml` (Depends on T001)
 
 ### Stage 2: Validation
-- [ ] T004 [Stage 2: Validate] Push to `main`, confirm CI `test` + `docker` jobs green (AC-001, AC-002) (Depends on T003)
-- [ ] T005 [Stage 2: Validate] `aws ecr describe-images` for the pushed SHA tag (AC-003) (Depends on T004)
+- [x] T004 [Stage 2: Validate] Push to `main`, confirm CI `test` + `docker` jobs green (AC-001, AC-002) (Depends on T003)
+- [x] T005 [Stage 2: Validate] `aws ecr describe-images` for the pushed SHA tag (AC-003) (Depends on T004)
 
 ---
 

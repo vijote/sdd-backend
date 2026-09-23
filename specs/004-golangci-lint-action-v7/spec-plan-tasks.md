@@ -2,7 +2,7 @@
 name: 004-golangci-lint-action-v7
 description: Bump golangci-lint-action from v6 to v7 in CI to support the golangci-lint v2.13.2 binary pinned in spec 003.
 date: 2026-09-22
-status: Approved
+status: Implemented
 ---
 
 # Spec · Plan · Tasks: Bump golangci-lint-action to v7

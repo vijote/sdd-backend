@@ -72,7 +72,7 @@ jobs:
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `docker` job green on push to `main` (bootstrap assume → target assume → ECR login → build + push all succeed).
+- [x] AC-001: CI `docker` job green on push to `main` (bootstrap assume → target assume → ECR login → build + push all succeed).
 
 ### Assumptions & Constraints
 - `AWS_BOOTSTRAP_ROLE_ARN` is a new repo variable; the other three already exist.
@@ -101,7 +101,7 @@ jobs:
 - [x] T002 [Stage 1: CI] In the `docker` job, replace the single `Configure AWS Credentials` step with `Configure AWS Bootstrap Credentials` (assume `AWS_BOOTSTRAP_ROLE_ARN`) + `Assume ECR Target Role` (assume `AWS_ECR_ROLE_ARN`, `role-chaining: true`) (Depends on T001)
 
 ### Stage 2: Validation
-- [ ] T003 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T002)
+- [x] T003 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T002)
 
 ---
 

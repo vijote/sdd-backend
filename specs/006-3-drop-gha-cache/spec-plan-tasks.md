@@ -29,7 +29,7 @@ status: Implemented
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `docker` job green on push to `main` (no `Cache export is not supported` error; build + push succeed).
+- [x] AC-001: CI `docker` job green on push to `main` (no `Cache export is not supported` error; build + push succeed).
 
 ### Assumptions & Constraints
 - Build time without layer cache is acceptable for this repo size (single small Go binary).
@@ -56,7 +56,7 @@ status: Implemented
 - [x] T001 [Stage 1: CI] Remove `cache-from: type=gha` and `cache-to: type=gha,mode=max` from the `Build and push` step in `.github/workflows/ci.yml`
 
 ### Stage 2: Validation
-- [ ] T002 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T001)
+- [x] T002 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T001)
 
 ---
 

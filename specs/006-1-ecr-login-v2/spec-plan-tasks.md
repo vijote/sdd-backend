@@ -24,7 +24,7 @@ status: Implemented
 ```
 
 ### Acceptance Criteria (machine-verifiable)
-- [ ] AC-001: CI `docker` job green on push to `main` (no `Unable to resolve action` error; build + push succeed).
+- [x] AC-001: CI `docker` job green on push to `main` (no `Unable to resolve action` error; build + push succeed).
 
 ### Assumptions & Constraints
 - `amazon-ecr-login@v2` exposes the same `registry` output used by the build-push step (v2 is the current major).
@@ -51,7 +51,7 @@ status: Implemented
 - [x] T001 [Stage 1: CI] Change `aws-actions/amazon-ecr-login@v4` to `aws-actions/amazon-ecr-login@v2` in `.github/workflows/ci.yml`
 
 ### Stage 2: Validation
-- [ ] T002 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T001)
+- [x] T002 [Stage 2: Validate] Push to `main`, confirm CI `docker` job green (AC-001) (Depends on T001)
 
 ---
 
