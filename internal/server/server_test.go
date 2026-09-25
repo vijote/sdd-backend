@@ -10,7 +10,7 @@ import (
 )
 
 func TestHealthEndpoint(t *testing.T) {
-	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"})
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
 
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
 	rec := httptest.NewRecorder()
@@ -33,7 +33,7 @@ func TestHealthEndpoint(t *testing.T) {
 }
 
 func TestUnknownRouteReturns404(t *testing.T) {
-	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"})
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
 
 	req := httptest.NewRequest(http.MethodGet, "/nope", nil)
 	rec := httptest.NewRecorder()

@@ -1,29 +1,27 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/006-3-drop-gha-cache` (T001–T002 `[x]` — DONE, CI green, image pushed to ECR)
+- `specs/008-mysql-integration` (T001–T010 `[x]` — DONE, build/lint/test green locally)
 
 **Objective:**
-- ECR push pipeline complete: CI `docker` job builds the image (spec 002 Dockerfile) and pushes to ECR via two-role OIDC auth. All specs in the 006 chain implemented and validated.
+- GORM+MySQL persistence layer: discrete `DB_*` env config, `internal/database` package (Open/Ping/Migrate), split `/healthz` (liveness) vs `/readyz` (DB readiness), `migrate` subcommand for infra-repo init container.
 
 **Context (Why):**
-- The image was never published to a registry, so the app could not be deployed to the k8s cluster. The 006 chain closed the build→push gap:
-  - 006 — docker job in CI (build + push, SHA + latest tags)
-  - 006-1 — pin `amazon-ecr-login@v2` (v4 does not exist)
-  - 006-2 — two-role OIDC auth (bootstrap → ECR target, `role-chaining: true`)
-  - 006-3 — drop GHA cache (plain docker driver does not support cache export)
-- Final state: CI `test` + `docker` jobs green on `main`; image in ECR `sdd-k8s-platform/backend` tagged with commit SHA + `latest`.
+- First spec of the URL shortener chain (008 MySQL → 009 shorten endpoint → 010 redirect endpoint). Constitution pivoted the repo to a URL shortener; the app previously had no persistence.
 
 **Modified/Uncommitted Files:**
-- `specs/006-ecr-push/spec-plan-tasks.md` (T004–T005 + ACs checked)
-- `specs/006-1-ecr-login-v2/spec-plan-tasks.md` (T002 + AC checked)
-- `specs/006-2-ecr-two-role-auth/spec-plan-tasks.md` (T003 + AC checked)
-- `specs/006-3-drop-gha-cache/spec-plan-tasks.md` (T002 + AC checked)
-- `.coda/STATE.md`
+- `internal/config/config.go`, `internal/config/config_test.go` (DB_* fields)
+- `internal/database/database.go`, `internal/database/migrate.go`, `internal/database/database_test.go` (new package)
+- `internal/handlers/health.go`, `internal/handlers/health_test.go` (Pinger + Ready)
+- `internal/server/server.go`, `internal/server/server_test.go` (DB wiring, /readyz)
+- `cmd/server/main.go` (serve/migrate subcommand dispatch)
+- `go.mod`, `go.sum` (gorm, mysql driver, testcontainers-go)
+- `specs/008-mysql-integration/spec-plan-tasks.md` (all tasks/ACs checked)
+- `.coda/feature.json`, `.coda/STATE.md`
 
 **Blockers/Unresolved Bugs:**
-- None.
+- None. (Note: golangci-lint is not on PATH; use `~/go/bin/golangci-lint`.)
 
 **Next Immediate Steps:**
-- Commit the spec checkbox updates (chore commit).
-- Start next feature spec: K8s manifests / cluster deployment (Deployment + Service + probes, image from ECR).
+- Commit spec 008 (one-liner, feat group).
+- `/specify` for 009 — shorten endpoint (POST /api/shorten, SHA-256→7 base62 code, collision retry, Link model registered in `internal/database/migrate.go` models()).

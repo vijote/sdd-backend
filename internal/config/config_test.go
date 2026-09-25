@@ -24,7 +24,7 @@ func unsetEnv(t *testing.T, keys ...string) {
 }
 
 func TestLoadDefaults(t *testing.T) {
-	unsetEnv(t, "PORT", "LOG_LEVEL")
+	unsetEnv(t, "PORT", "LOG_LEVEL", "DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME")
 
 	cfg, err := Load()
 	if err != nil {
@@ -35,6 +35,21 @@ func TestLoadDefaults(t *testing.T) {
 	}
 	if cfg.LogLevel != "info" {
 		t.Errorf("LogLevel = %q, want %q", cfg.LogLevel, "info")
+	}
+	if cfg.DBHost != "localhost" {
+		t.Errorf("DBHost = %q, want %q", cfg.DBHost, "localhost")
+	}
+	if cfg.DBPort != 3306 {
+		t.Errorf("DBPort = %d, want 3306", cfg.DBPort)
+	}
+	if cfg.DBUser != "root" {
+		t.Errorf("DBUser = %q, want %q", cfg.DBUser, "root")
+	}
+	if cfg.DBPassword != "" {
+		t.Errorf("DBPassword = %q, want empty", cfg.DBPassword)
+	}
+	if cfg.DBName != "sdd_backend" {
+		t.Errorf("DBName = %q, want %q", cfg.DBName, "sdd_backend")
 	}
 }
 
