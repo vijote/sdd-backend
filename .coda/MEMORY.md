@@ -8,3 +8,4 @@
 ## Learned Facts & Compatibility Rules
 
 ## Known Gotchas
+- sdd-infra-v2 dev ingress strips one /api prefix (rewrite-target /$2 on path /api(/|$)(.*)), so backend routes registered under /api/... are only reachable publicly at /api/api/... — backend should register routes without the /api prefix (e.g. /shorten); live domain: https://demo.vijote.dev

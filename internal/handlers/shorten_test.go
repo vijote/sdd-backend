@@ -35,7 +35,7 @@ func (f *fakeShortener) Shorten(_ context.Context, longURL string) (*shortener.L
 
 func postShorten(t *testing.T, svc Shortener, body string) *httptest.ResponseRecorder {
 	t.Helper()
-	req := httptest.NewRequest(http.MethodPost, "/api/shorten", strings.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, "/shorten", strings.NewReader(body))
 	rec := httptest.NewRecorder()
 	Shorten(svc).ServeHTTP(rec, req)
 	return rec

@@ -50,7 +50,7 @@ func TestShortenRouteWired(t *testing.T) {
 
 	// Invalid URL proves the route is wired and reaches the service layer
 	// (a real DB handle is required for a successful 201, which needs MySQL).
-	req := httptest.NewRequest(http.MethodPost, "/api/shorten", strings.NewReader(`{"url":"ftp://example.com"}`))
+	req := httptest.NewRequest(http.MethodPost, "/shorten", strings.NewReader(`{"url":"ftp://example.com"}`))
 	rec := httptest.NewRecorder()
 	router.ServeHTTP(rec, req)
 
@@ -59,5 +59,19 @@ func TestShortenRouteWired(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), "invalid url") {
 		t.Errorf("body = %q", rec.Body.String())
+	}
+}
+
+func TestOldApiShortenRouteRemoved(t *testing.T) {
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
+
+	// The dev ingress strips one /api prefix, so the backend must NOT register
+	// /api/shorten — the old prefixed route must 404.
+	req := httptest.NewRequest(http.MethodPost, "/api/shorten", strings.NewReader(`{"url":"https://example.com"}`))
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusNotFound)
 	}
 }

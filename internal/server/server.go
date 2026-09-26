@@ -31,7 +31,7 @@ func NewRouter(cfg *config.Config, db *database.DB) http.Handler {
 	if db != nil {
 		r.Get("/readyz", handlers.Ready(db))
 	}
-	r.Post("/api/shorten", handlers.Shorten(shortener.NewService(shortener.NewRepository(db))))
+	r.Post("/shorten", handlers.Shorten(shortener.NewService(shortener.NewRepository(db))))
 	return r
 }
 
