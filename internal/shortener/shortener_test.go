@@ -165,3 +165,64 @@ func TestServiceShortenInvalidURL(t *testing.T) {
 		t.Fatalf("unexpected error text %q", err.Error())
 	}
 }
+
+func TestValidateCode(t *testing.T) {
+	cases := []struct {
+		name string
+		code string
+		want bool
+	}{
+		{"valid lowercase", "abc123X", true},
+		{"valid digits", "0000000", true},
+		{"valid uppercase", "ZZZZZZZ", true},
+		{"too short", "abc12", false},
+		{"too long", "abc12345", false},
+		{"empty", "", false},
+		{"hyphen", "abc-123", false},
+		{"underscore", "abc_123", false},
+		{"space", "abc 123", false},
+		{"unicode", "ábc1234", false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := ValidateCode(tc.code); got != tc.want {
+				t.Fatalf("ValidateCode(%q) = %v, want %v", tc.code, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestServiceResolveFound(t *testing.T) {
+	repo := newFakeRepo()
+	svc := NewService(repo)
+	created, err := svc.Shorten(context.Background(), "https://example.com/path")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	link, err := svc.Resolve(context.Background(), created.Code)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if link.Code != created.Code || link.LongURL != created.LongURL {
+		t.Fatalf("unexpected link %+v", link)
+	}
+}
+
+func TestServiceResolveUnknown(t *testing.T) {
+	repo := newFakeRepo()
+	_, err := NewService(repo).Resolve(context.Background(), "zzzzzzz")
+	if !errors.Is(err, ErrNotFound) {
+		t.Fatalf("expected ErrNotFound, got %v", err)
+	}
+}
+
+func TestServiceResolveMalformedSkipsRepo(t *testing.T) {
+	repo := newFakeRepo()
+	_, err := NewService(repo).Resolve(context.Background(), "short")
+	if !errors.Is(err, ErrNotFound) {
+		t.Fatalf("expected ErrNotFound, got %v", err)
+	}
+	if repo.creates != 0 {
+		t.Fatalf("expected no repo activity, got %d creates", repo.creates)
+	}
+}

@@ -75,3 +75,46 @@ func TestOldApiShortenRouteRemoved(t *testing.T) {
 		t.Fatalf("status = %d, want %d", rec.Code, http.StatusNotFound)
 	}
 }
+
+func TestRedirectRouteWired(t *testing.T) {
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
+
+	// A malformed code proves the route is wired: it 404s without touching the
+	// (nil) database, since ValidateCode rejects it before the repo lookup.
+	req := httptest.NewRequest(http.MethodGet, "/short", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusNotFound)
+	}
+	if !strings.Contains(rec.Body.String(), "not found") {
+		t.Errorf("body = %q", rec.Body.String())
+	}
+}
+
+func TestRedirectUnknownCodeRouteWired(t *testing.T) {
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
+
+	// A well-formed but unknown code reaches the repo; with a nil DB the repo
+	// returns a database error, which the handler maps to 404.
+	req := httptest.NewRequest(http.MethodGet, "/zzzzzzz", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusNotFound)
+	}
+}
+
+func TestRedirectPostMethodNotAllowed(t *testing.T) {
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
+
+	req := httptest.NewRequest(http.MethodPost, "/aB3xK9m", nil)
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusMethodNotAllowed)
+	}
+}

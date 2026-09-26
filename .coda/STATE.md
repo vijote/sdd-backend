@@ -1,25 +1,26 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/009-1-backend-route-prefix` (T001–T006 `[x]` — DONE, build/lint/test green locally)
+- `specs/010-redirect-endpoint` (T001–T006 `[x]` — DONE, implemented locally, NOT yet committed)
+- `specs/009-1-backend-route-prefix` (T001–T006 `[x]` — DONE, committed `8363b7a`, pushed)
+- `specs/009-shorten-endpoint` (T001–T013 `[x]` — DONE, committed `73958c6`, pushed)
 
 **Objective:**
-- Register backend routes without the `/api` prefix (`POST /shorten`) so the dev ingress prefix-strip yields the intended public URL `https://demo.vijote.dev/api/shorten`. Old `/api/shorten` backend route removed (404-tested).
+- URL shortener chain progress: 008 MySQL layer → 009 shorten endpoint → 009-1 route-prefix fix → 010 redirect endpoint (GET /{code} → 301 to stored long URL; unknown/malformed → 404; malformed codes rejected pre-DB by ValidateCode).
 
 **Context (Why):**
-- Follow-on fix to 009: live smoke test showed the ingress strips one `/api`, so the backend's `/api/shorten` was only reachable at `/api/api/shorten`. Decision A: fix backend-side, ingress untouched.
+- 010 adds the redirect half of the shortener. Service gained `Resolve` + `ValidateCode` (7-char base62, pre-DB check); handler issues 301 + `Location` (HEAD also registered); router maps `/{code}`. All ACs verified: `go build`, `go vet`, `go test ./...` (incl. testcontainers MySQL integration), `golangci-lint run` → 0 issues.
 
 **Modified/Uncommitted Files:**
-- `internal/server/server.go` (route rename)
-- `internal/server/server_test.go` (`/shorten` wired test + old-route 404 test)
-- `internal/handlers/shorten_test.go` (path literal)
-- `specs/009-1-backend-route-prefix/spec-plan-tasks.md` (all tasks/ACs checked)
-- `.coda/feature.json`, `.coda/STATE.md`
+- `internal/shortener/shortener.go`, `internal/shortener/shortener_test.go`
+- `internal/handlers/redirect.go` (new), `internal/handlers/redirect_test.go` (new)
+- `internal/server/server.go`, `internal/server/server_test.go`
+- `specs/010-redirect-endpoint/spec-plan-tasks.md` (new), `.coda/feature.json`, `.coda/STATE.md`
 
 **Blockers/Unresolved Bugs:**
-- None. (golangci-lint not on PATH — use `~/go/bin/golangci-lint`.)
+- None open. Carried over from 009-1: live TLS chain curl couldn't verify (`-k` used); not investigated.
+- Note: 301 is permanent — browsers may cache redirects aggressively (user-accepted tradeoff).
 
 **Next Immediate Steps:**
-- Commit spec 009-1 (one-liner, fix group) and push — deploy chain picks it up.
-- Live verify after deploy: `curl -sk -X POST https://demo.vijote.dev/api/shorten -H 'Content-Type: application/json' -d '{"url":"https://example.com"}'` → 201.
-- `/specify` for 010 — redirect endpoint (GET /{code} → 301/302 to stored long URL, 404 unknown).
+- Commit + push 010 (suggested: `feat(redirect-endpoint): GET /{code} 301 redirect with 404 fallback`), let CI deploy, then smoke-test live: `curl -si https://demo.vijote.dev/api/{code}` → 301 + Location; unknown code → 404.
+- Optionally `/specify` 011 (e.g., click analytics, rate limiting) if desired.

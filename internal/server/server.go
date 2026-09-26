@@ -32,6 +32,8 @@ func NewRouter(cfg *config.Config, db *database.DB) http.Handler {
 		r.Get("/readyz", handlers.Ready(db))
 	}
 	r.Post("/shorten", handlers.Shorten(shortener.NewService(shortener.NewRepository(db))))
+	r.Get("/{code}", handlers.Redirect(shortener.NewService(shortener.NewRepository(db))))
+	r.Head("/{code}", handlers.Redirect(shortener.NewService(shortener.NewRepository(db))))
 	return r
 }
 

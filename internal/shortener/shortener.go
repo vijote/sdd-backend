@@ -38,9 +38,10 @@ type Repository interface {
 	FindByCode(ctx context.Context, code string) (*Link, error)
 }
 
-// Service shortens long URLs.
+// Service shortens long URLs and resolves short codes.
 type Service interface {
 	Shorten(ctx context.Context, longURL string) (*Link, error)
+	Resolve(ctx context.Context, code string) (*Link, error)
 }
 
 // ValidateURL checks that raw is non-empty, parseable, and http/https.
@@ -68,6 +69,21 @@ func GenerateCode(longURL string, salt int) string {
 	return base62Encode(hash[:])[:CodeLength]
 }
 
+// ValidateCode reports whether code is exactly CodeLength base62 characters.
+func ValidateCode(code string) bool {
+	if len(code) != CodeLength {
+		return false
+	}
+	for _, c := range code {
+		switch {
+		case c >= '0' && c <= '9', c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z':
+		default:
+			return false
+		}
+	}
+	return true
+}
+
 // base62Encode encodes bytes as a base62 string ([0-9a-zA-Z]).
 func base62Encode(data []byte) string {
 	alphabet := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -85,6 +101,15 @@ func base62Encode(data []byte) string {
 		encoded = "0" + encoded
 	}
 	return encoded
+}
+
+// Resolve returns the link for a short code. Malformed codes and unknown
+// codes both map to ErrNotFound.
+func (s *service) Resolve(ctx context.Context, code string) (*Link, error) {
+	if !ValidateCode(code) {
+		return nil, ErrNotFound
+	}
+	return s.repo.FindByCode(ctx, code)
 }
 
 // ErrDuplicateCode is returned by Repository.Create when the code already exists.
