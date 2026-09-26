@@ -1,27 +1,28 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/008-mysql-integration` (T001–T010 `[x]` — DONE, build/lint/test green locally)
+- `specs/009-shorten-endpoint` (T001–T013 `[x]` — DONE, build/lint/test green locally, incl. testcontainers MySQL integration tests)
 
 **Objective:**
-- GORM+MySQL persistence layer: discrete `DB_*` env config, `internal/database` package (Open/Ping/Migrate), split `/healthz` (liveness) vs `/readyz` (DB readiness), `migrate` subcommand for infra-repo init container.
+- POST /api/shorten: validated long URL (http/https), SHA-256→7 base62 code with salt collision retry, idempotent persistence (unique `long_url`), GORM `Link` model migrated via `migrate` subcommand.
 
 **Context (Why):**
-- First spec of the URL shortener chain (008 MySQL → 009 shorten endpoint → 010 redirect endpoint). Constitution pivoted the repo to a URL shortener; the app previously had no persistence.
+- Second spec of the URL shortener chain (008 MySQL → 009 shorten → 010 redirect). Lets us test the MySQL integration end-to-end through a real write path.
 
 **Modified/Uncommitted Files:**
-- `internal/config/config.go`, `internal/config/config_test.go` (DB_* fields)
-- `internal/database/database.go`, `internal/database/migrate.go`, `internal/database/database_test.go` (new package)
-- `internal/handlers/health.go`, `internal/handlers/health_test.go` (Pinger + Ready)
-- `internal/server/server.go`, `internal/server/server_test.go` (DB wiring, /readyz)
-- `cmd/server/main.go` (serve/migrate subcommand dispatch)
-- `go.mod`, `go.sum` (gorm, mysql driver, testcontainers-go)
-- `specs/008-mysql-integration/spec-plan-tasks.md` (all tasks/ACs checked)
+- `internal/shortener/shortener.go`, `internal/shortener/shortener_test.go` (new: codegen, validation, service)
+- `internal/shortener/repository.go`, `internal/shortener/repository_test.go` (new: GORM repo + testcontainers tests)
+- `internal/database/link.go` (new: `Link` model — lives here to avoid import cycle with `shortener`)
+- `internal/database/migrate.go` (register `Link` in `models()`)
+- `internal/handlers/shorten.go`, `internal/handlers/shorten_test.go` (new: POST /api/shorten handler + tests)
+- `internal/server/server.go`, `internal/server/server_test.go` (route wiring)
+- `specs/009-shorten-endpoint/spec-plan-tasks.md` (all tasks/ACs checked)
 - `.coda/feature.json`, `.coda/STATE.md`
 
 **Blockers/Unresolved Bugs:**
-- None. (Note: golangci-lint is not on PATH; use `~/go/bin/golangci-lint`.)
+- None. (golangci-lint not on PATH — use `~/go/bin/golangci-lint`.)
 
 **Next Immediate Steps:**
-- Commit spec 008 (one-liner, feat group).
-- `/specify` for 009 — shorten endpoint (POST /api/shorten, SHA-256→7 base62 code, collision retry, Link model registered in `internal/database/migrate.go` models()).
+- Commit spec 009 (one-liner, feat group).
+- `/specify` for 010 — redirect endpoint (GET /{code} → 301/302 to stored long URL, 404 unknown).
+- Live smoke test: run `serve` against the provisioned MySQL (needs working DB creds — root/no-password was rejected earlier) and POST to /api/shorten.

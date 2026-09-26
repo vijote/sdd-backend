@@ -10,6 +10,7 @@ import (
 	"github.com/vijote/sdd-backend/internal/config"
 	"github.com/vijote/sdd-backend/internal/database"
 	"github.com/vijote/sdd-backend/internal/handlers"
+	"github.com/vijote/sdd-backend/internal/shortener"
 )
 
 // Server wraps an http.Server configured from application config.
@@ -30,6 +31,7 @@ func NewRouter(cfg *config.Config, db *database.DB) http.Handler {
 	if db != nil {
 		r.Get("/readyz", handlers.Ready(db))
 	}
+	r.Post("/api/shorten", handlers.Shorten(shortener.NewService(shortener.NewRepository(db))))
 	return r
 }
 

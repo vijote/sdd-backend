@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/vijote/sdd-backend/internal/config"
@@ -41,5 +42,22 @@ func TestUnknownRouteReturns404(t *testing.T) {
 
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("status = %d, want %d", rec.Code, http.StatusNotFound)
+	}
+}
+
+func TestShortenRouteWired(t *testing.T) {
+	router := NewRouter(&config.Config{Port: 8080, LogLevel: "info"}, nil)
+
+	// Invalid URL proves the route is wired and reaches the service layer
+	// (a real DB handle is required for a successful 201, which needs MySQL).
+	req := httptest.NewRequest(http.MethodPost, "/api/shorten", strings.NewReader(`{"url":"ftp://example.com"}`))
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusBadRequest)
+	}
+	if !strings.Contains(rec.Body.String(), "invalid url") {
+		t.Errorf("body = %q", rec.Body.String())
 	}
 }

@@ -4,10 +4,11 @@ import (
 	"fmt"
 )
 
-// models returns the GORM models to migrate. Spec 009 (shorten endpoint)
-// will register its models here; the list is intentionally empty for now.
+// models returns the GORM models to migrate.
 func models() []any {
-	return []any{}
+	return []any{
+		&Link{},
+	}
 }
 
 // Migrate runs schema migrations. It is idempotent: repeated runs against an
